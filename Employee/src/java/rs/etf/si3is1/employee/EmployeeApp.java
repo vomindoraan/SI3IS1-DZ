@@ -1,6 +1,7 @@
 package rs.etf.si3is1.employee;
 
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
@@ -22,6 +23,8 @@ import rs.etf.si3is1.entities.Inventory;
 import rs.etf.si3is1.entities.InventoryPK;
 import rs.etf.si3is1.entities.Product;
 import rs.etf.si3is1.entities.Reservation;
+import rs.etf.si3is1.entities.Store;
+import rs.etf.si3is1.entities.Turnover;
 import rs.etf.si3is1.messaging.Condition;
 import rs.etf.si3is1.messaging.Identifiable;
 import rs.etf.si3is1.utils.ConsoleUtils;
@@ -174,6 +177,7 @@ public class EmployeeApp implements Identifiable {
     private void performPurchase(EntityManager em, Product p) {
         int idStore = employee.getIdStore().getIdStore(); // First returns Store, second int
         Inventory inv = em.find(Inventory.class, new InventoryPK(idStore, p.getIdProduct()));
+        Turnover turn = getTurnover(em);
 
         float maxAmount = inv.getAmount();
         if (maxAmount == 0) {
@@ -206,7 +210,9 @@ public class EmployeeApp implements Identifiable {
         
         em.getTransaction().begin();
         
-        inv.setAmount(maxAmount - amount);
+        inv.setAmount(inv.getAmount() - amount);
+        turn.setAmount(turn.getAmount() + amount);
+        turn.setProfit(turn.getProfit().add(total));
         System.out.println("Purchase completed");
         
         em.getTransaction().commit();
@@ -267,14 +273,14 @@ public class EmployeeApp implements Identifiable {
             "*** FULFILL RESERVATION ***",
             "Customer name: "
         ));
+        INPUT.nextLine(); // Flush
         String customerName = INPUT.nextLine();
         
         EntityManager em = EMF.createEntityManager();
         
         TypedQuery<Reservation> q = em.createQuery(
             "SELECT r FROM Reservation r WHERE r.customerName = :customerName AND r.idStore = :idStore",
-            Reservation.class
-        );
+            Reservation.class);
         q.setParameter("customerName", customerName).setParameter("idStore", employee.getIdStore());
         
         List<Reservation> reservations = q.getResultList();
@@ -341,5 +347,32 @@ public class EmployeeApp implements Identifiable {
         System.out.println("Condition: " + cond.name().toLowerCase());
         
         context.close();
+    }
+    
+    private Turnover getTurnover(EntityManager em) {
+        Store store = employee.getIdStore();
+        Date date = new Date();
+
+        TypedQuery<Turnover> q = em.createQuery(
+            "SELECT t FROM Turnover t WHERE t.idStore = :store AND t.date = :date",
+            Turnover.class);
+        q.setParameter("store", store).setParameter("date", date);
+
+        List<Turnover> results = q.getResultList();
+        if (!results.isEmpty()) {
+            return results.get(0);
+        }
+
+        em.getTransaction().begin();
+
+        Turnover turn = new Turnover();
+        turn.setIdStore(store);
+        turn.setDate(date);
+        turn.setAmount(0);
+        turn.setProfit(BigDecimal.ZERO);
+        em.persist(turn);
+
+        em.getTransaction().commit();
+        return turn;
     }
 }
