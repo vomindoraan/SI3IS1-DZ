@@ -2,7 +2,9 @@ package rs.etf.si3is1.employee;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 import javax.annotation.Resource;
 import javax.jms.ConnectionFactory;
 import javax.jms.JMSConsumer;
@@ -164,11 +166,17 @@ public class EmployeeApp implements Identifiable {
             return;
         }
         
+        performPurchase(em, p);
+        
+        em.close();
+    }
+    
+    private void performPurchase(EntityManager em, Product p) {
         int idStore = employee.getIdStore().getIdStore(); // First returns Store, second int
         Inventory inv = em.find(Inventory.class, new InventoryPK(idStore, p.getIdProduct()));
-        
-        float maxAmount;
-        if (inv == null || (maxAmount = inv.getAmount()) == 0) {
+
+        float maxAmount = inv.getAmount();
+        if (maxAmount == 0) {
             System.out.println("Out of stock, make a reservation instead ([y]/n)?");
             INPUT.nextLine(); // Flush
             if (!INPUT.nextLine().toLowerCase().equals("n")) {
@@ -189,7 +197,7 @@ public class EmployeeApp implements Identifiable {
             "You are about to purchase %.2f of: %s",
             "Total price: %.2f",
             "Are you sure ([y]/n)? "
-        ), amount, total, p);
+        ), amount, p, total);
         INPUT.nextLine(); // Flush
         if (INPUT.nextLine().toLowerCase().equals("n")) {
             em.close();
@@ -202,7 +210,6 @@ public class EmployeeApp implements Identifiable {
         System.out.println("Purchase completed");
         
         em.getTransaction().commit();
-        em.close();
     }
     
     public void makeReservation() {
@@ -255,6 +262,47 @@ public class EmployeeApp implements Identifiable {
     public void fulfillReservation() {
         // Ask for name, list reservations for that name, ask for reservation getID,
         // check if there's enough in stock, if not check in other stores
+        ConsoleUtils.clear();
+        System.out.print(String.join("\n",
+            "*** FULFILL RESERVATION ***",
+            "Customer name: "
+        ));
+        String customerName = INPUT.nextLine();
+        
+        EntityManager em = EMF.createEntityManager();
+        
+        TypedQuery<Reservation> q = em.createQuery(
+            "SELECT r FROM Reservation r WHERE r.customerName = :customerName AND r.idStore = :idStore",
+            Reservation.class
+        );
+        q.setParameter("customerName", customerName).setParameter("idStore", employee.getIdStore());
+        
+        List<Reservation> reservations = q.getResultList();
+        if (reservations.isEmpty()) {
+            System.err.println("Customer has no reservations in this store");
+            em.close();
+            return;
+        }
+        Map<Integer, Reservation> reservationMap = reservations.stream().collect(
+                Collectors.toMap(r -> r.getIdReservation(), r -> r));
+        
+        System.out.println("\nReservations:");
+        reservations.forEach(r -> System.out.println(r));
+        System.out.print("\n> ");
+        int id = INPUT.nextInt();
+        
+        if (reservationMap.containsKey(id)) {
+            Reservation r = reservationMap.get(id);
+            performPurchase(em, r.getIdProduct());
+            
+            em.getTransaction().begin();
+            em.remove(r);
+            em.getTransaction().commit();
+        } else {
+            System.err.println("Reservation " + id + " doesn't exist");
+        }
+        
+        em.close();
     }
 
     public void conditionCheck() {

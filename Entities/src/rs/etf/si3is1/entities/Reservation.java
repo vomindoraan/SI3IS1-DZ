@@ -125,7 +125,9 @@ public class Reservation implements Serializable {
 
     @Override
     public String toString() {
-        return "rs.etf.si3is1.entities.Reservation[ idReservation=" + idReservation + " ]";
+        return (customerPhoneNo != null)
+                ? String.format("[%d] %s (%s):  %s", idReservation, customerName, customerPhoneNo, idProduct)
+                : String.format("[%d] %s: %s", idReservation, customerName, idProduct);
     }
     
 }
