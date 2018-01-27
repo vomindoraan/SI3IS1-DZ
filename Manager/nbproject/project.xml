@@ -11,11 +11,11 @@
             <test-roots>
                 <root id="test.src.dir"/>
             </test-roots>
-            <included-library dirs="200">file.reference.eclipselink.jar-1</included-library>
-            <included-library dirs="200">file.reference.javax.persistence_2.1.0.v201304241213.jar-1</included-library>
-            <included-library dirs="200">file.reference.mysql-connector-java-5.1.23-bin.jar-1</included-library>
-            <included-library dirs="200">file.reference.org.eclipse.persistence.jpa.jpql_2.5.2.v20140319-9ad6abd.jar-1</included-library>
-            <included-library dirs="200">file.reference.org.eclipse.persistence.jpa.modelgen_2.5.2.v20140319-9ad6abd.jar-1</included-library>
+            <included-library dirs="200">file.reference.eclipselink.jar</included-library>
+            <included-library dirs="200">file.reference.javax.persistence_2.1.0.v201304241213.jar</included-library>
+            <included-library dirs="200">file.reference.mysql-connector-java-5.1.23-bin.jar</included-library>
+            <included-library dirs="200">file.reference.org.eclipse.persistence.jpa.jpql_2.5.2.v20140319-9ad6abd.jar</included-library>
+            <included-library dirs="200">file.reference.org.eclipse.persistence.jpa.modelgen_2.5.2.v20140319-9ad6abd.jar</included-library>
             <included-library dirs="200">reference.Messaging.jar</included-library>
             <included-library dirs="200">reference.Entities.jar</included-library>
             <included-library dirs="200">reference.Utils.jar</included-library>

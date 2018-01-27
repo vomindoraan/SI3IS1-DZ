@@ -1,6 +1,9 @@
 package rs.etf.si3is1.employee;
 
 import java.math.BigDecimal;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalUnit;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -18,6 +21,7 @@ import javax.jms.Topic;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import rs.etf.si3is1.entities.Employee;
 import rs.etf.si3is1.entities.Inventory;
@@ -305,8 +309,6 @@ public class EmployeeApp implements Identifiable {
     }
     
     public void fulfillReservation() {
-        // Ask for name, list reservations for that name, ask for reservation getID,
-        // check if there's enough in stock, if not check in other stores
         ConsoleUtils.clear();
         System.out.print(String.join("\n",
             "*** FULFILL RESERVATION ***",
@@ -428,5 +430,55 @@ public class EmployeeApp implements Identifiable {
             "Amount: " + rev.getAmount(),
             "Profit: " + rev.getProfit()
         ));
+        
+        // *** BEGIN MODIFICATION ***
+        
+        System.out.println();
+        em = EMF.createEntityManager();
+        
+        Instant endInstant = Instant.now();
+        Instant startInstant = endInstant.minus(3, ChronoUnit.DAYS);
+        Date endDate = new Date(endInstant.toEpochMilli());
+        Date startDate = new Date(startInstant.toEpochMilli());
+        
+        // Option 1: basic query + maximum in loop
+//        TypedQuery<Turnover> q = em.createQuery(String.join(" ",
+//                "SELECT t",
+//                "FROM Turnover t",
+//                "WHERE t.date > :startDate AND t.date <= :endDate"
+//            ), Turnover.class);
+//        q.setParameter("startDate", startDate).setParameter("endDate", endDate);
+//        Turnover maxTurn = null;
+//        List<Turnover> results = q.getResultList();
+//        for (Turnover t : results) {
+//            if (maxTurn == null || t.getAmount() > maxTurn.getAmount()) {
+//                maxTurn = t;
+//            }
+//        };
+//        
+        // Option 2: complex query
+        TypedQuery<Turnover> q = em.createQuery(String.join(" ",
+                "SELECT t",
+                "FROM Turnover t",
+                "WHERE t.date > :startDate AND t.date <= :endDate",
+                "AND t.amount = (",
+                "   SELECT MAX(t1.amount)",
+                "   FROM Turnover t1",
+                "   WHERE t1.date > :startDate AND t1.date <= :endDate",
+                ")"
+            ), Turnover.class);
+        q.setParameter("startDate", startDate).setParameter("endDate", endDate);
+        Turnover maxTurn = q.getSingleResult();
+
+        System.out.println(String.join("\n",
+            "*** HIGHEST AMOUNT IN LAST 3 DAYS ***",
+            "Store:  " + maxTurn.getIdStore(),
+            "Amount: " + maxTurn.getAmount(),
+            "Profit: " + maxTurn.getProfit()
+        ));
+        
+        em.close();
+        
+        // *** END MODIFICATION ***
     }
 }

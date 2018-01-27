@@ -788,37 +788,37 @@ exists or setup the property manually. For example like this:
         <!-- You can override this target in the ../build.xml file. -->
     </target>
     <target depends="compile" if="is.server.weblogic" name="library-inclusion-in-archive">
-        <basename file="${file.reference.eclipselink.jar-1}" property="manifest.file.reference.eclipselink.jar-1"/>
-        <basename file="${file.reference.javax.persistence_2.1.0.v201304241213.jar-1}" property="manifest.file.reference.javax.persistence_2.1.0.v201304241213.jar-1"/>
-        <basename file="${file.reference.mysql-connector-java-5.1.23-bin.jar-1}" property="manifest.file.reference.mysql-connector-java-5.1.23-bin.jar-1"/>
-        <basename file="${file.reference.org.eclipse.persistence.jpa.jpql_2.5.2.v20140319-9ad6abd.jar-1}" property="manifest.file.reference.org.eclipse.persistence.jpa.jpql_2.5.2.v20140319-9ad6abd.jar-1"/>
-        <basename file="${file.reference.org.eclipse.persistence.jpa.modelgen_2.5.2.v20140319-9ad6abd.jar-1}" property="manifest.file.reference.org.eclipse.persistence.jpa.modelgen_2.5.2.v20140319-9ad6abd.jar-1"/>
+        <basename file="${file.reference.eclipselink.jar}" property="manifest.file.reference.eclipselink.jar"/>
+        <basename file="${file.reference.javax.persistence_2.1.0.v201304241213.jar}" property="manifest.file.reference.javax.persistence_2.1.0.v201304241213.jar"/>
+        <basename file="${file.reference.mysql-connector-java-5.1.23-bin.jar}" property="manifest.file.reference.mysql-connector-java-5.1.23-bin.jar"/>
+        <basename file="${file.reference.org.eclipse.persistence.jpa.jpql_2.5.2.v20140319-9ad6abd.jar}" property="manifest.file.reference.org.eclipse.persistence.jpa.jpql_2.5.2.v20140319-9ad6abd.jar"/>
+        <basename file="${file.reference.org.eclipse.persistence.jpa.modelgen_2.5.2.v20140319-9ad6abd.jar}" property="manifest.file.reference.org.eclipse.persistence.jpa.modelgen_2.5.2.v20140319-9ad6abd.jar"/>
         <basename file="${reference.Messaging.jar}" property="manifest.reference.Messaging.jar"/>
         <basename file="${reference.Entities.jar}" property="manifest.reference.Entities.jar"/>
         <basename file="${reference.Utils.jar}" property="manifest.reference.Utils.jar"/>
         <manifest file="${build.ear.classes.dir}/META-INF/MANIFEST.MF" mode="update">
             <attribute name="Extension-List" value="jar-1 jar-2 jar-3 jar-4 jar-5 jar-6 jar-7 jar-8 "/>
-            <attribute name="jar-1-Extension-Name" value="${manifest.file.reference.eclipselink.jar-1}"/>
-            <attribute name="jar-2-Extension-Name" value="${manifest.file.reference.javax.persistence_2.1.0.v201304241213.jar-1}"/>
-            <attribute name="jar-3-Extension-Name" value="${manifest.file.reference.mysql-connector-java-5.1.23-bin.jar-1}"/>
-            <attribute name="jar-4-Extension-Name" value="${manifest.file.reference.org.eclipse.persistence.jpa.jpql_2.5.2.v20140319-9ad6abd.jar-1}"/>
-            <attribute name="jar-5-Extension-Name" value="${manifest.file.reference.org.eclipse.persistence.jpa.modelgen_2.5.2.v20140319-9ad6abd.jar-1}"/>
+            <attribute name="jar-1-Extension-Name" value="${manifest.file.reference.eclipselink.jar}"/>
+            <attribute name="jar-2-Extension-Name" value="${manifest.file.reference.javax.persistence_2.1.0.v201304241213.jar}"/>
+            <attribute name="jar-3-Extension-Name" value="${manifest.file.reference.mysql-connector-java-5.1.23-bin.jar}"/>
+            <attribute name="jar-4-Extension-Name" value="${manifest.file.reference.org.eclipse.persistence.jpa.jpql_2.5.2.v20140319-9ad6abd.jar}"/>
+            <attribute name="jar-5-Extension-Name" value="${manifest.file.reference.org.eclipse.persistence.jpa.modelgen_2.5.2.v20140319-9ad6abd.jar}"/>
             <attribute name="jar-6-Extension-Name" value="${manifest.reference.Messaging.jar}"/>
             <attribute name="jar-7-Extension-Name" value="${manifest.reference.Entities.jar}"/>
             <attribute name="jar-8-Extension-Name" value="${manifest.reference.Utils.jar}"/>
         </manifest>
     </target>
     <target depends="compile" if="dist.ear.dir" name="library-inclusion-in-manifest">
-        <copyfiles files="${file.reference.eclipselink.jar-1}" manifestproperty="manifest.file.reference.eclipselink.jar-1" todir="${dist.ear.dir}/lib"/>
-        <copyfiles files="${file.reference.javax.persistence_2.1.0.v201304241213.jar-1}" manifestproperty="manifest.file.reference.javax.persistence_2.1.0.v201304241213.jar-1" todir="${dist.ear.dir}/lib"/>
-        <copyfiles files="${file.reference.mysql-connector-java-5.1.23-bin.jar-1}" manifestproperty="manifest.file.reference.mysql-connector-java-5.1.23-bin.jar-1" todir="${dist.ear.dir}/lib"/>
-        <copyfiles files="${file.reference.org.eclipse.persistence.jpa.jpql_2.5.2.v20140319-9ad6abd.jar-1}" manifestproperty="manifest.file.reference.org.eclipse.persistence.jpa.jpql_2.5.2.v20140319-9ad6abd.jar-1" todir="${dist.ear.dir}/lib"/>
-        <copyfiles files="${file.reference.org.eclipse.persistence.jpa.modelgen_2.5.2.v20140319-9ad6abd.jar-1}" manifestproperty="manifest.file.reference.org.eclipse.persistence.jpa.modelgen_2.5.2.v20140319-9ad6abd.jar-1" todir="${dist.ear.dir}/lib"/>
+        <copyfiles files="${file.reference.eclipselink.jar}" manifestproperty="manifest.file.reference.eclipselink.jar" todir="${dist.ear.dir}/lib"/>
+        <copyfiles files="${file.reference.javax.persistence_2.1.0.v201304241213.jar}" manifestproperty="manifest.file.reference.javax.persistence_2.1.0.v201304241213.jar" todir="${dist.ear.dir}/lib"/>
+        <copyfiles files="${file.reference.mysql-connector-java-5.1.23-bin.jar}" manifestproperty="manifest.file.reference.mysql-connector-java-5.1.23-bin.jar" todir="${dist.ear.dir}/lib"/>
+        <copyfiles files="${file.reference.org.eclipse.persistence.jpa.jpql_2.5.2.v20140319-9ad6abd.jar}" manifestproperty="manifest.file.reference.org.eclipse.persistence.jpa.jpql_2.5.2.v20140319-9ad6abd.jar" todir="${dist.ear.dir}/lib"/>
+        <copyfiles files="${file.reference.org.eclipse.persistence.jpa.modelgen_2.5.2.v20140319-9ad6abd.jar}" manifestproperty="manifest.file.reference.org.eclipse.persistence.jpa.modelgen_2.5.2.v20140319-9ad6abd.jar" todir="${dist.ear.dir}/lib"/>
         <copyfiles files="${reference.Messaging.jar}" manifestproperty="manifest.reference.Messaging.jar" todir="${dist.ear.dir}/lib"/>
         <copyfiles files="${reference.Entities.jar}" manifestproperty="manifest.reference.Entities.jar" todir="${dist.ear.dir}/lib"/>
         <copyfiles files="${reference.Utils.jar}" manifestproperty="manifest.reference.Utils.jar" todir="${dist.ear.dir}/lib"/>
         <manifest file="${build.ear.classes.dir}/META-INF/MANIFEST.MF" mode="update">
-            <attribute name="Class-Path" value="${manifest.file.reference.eclipselink.jar-1} lib/${manifest.file.reference.eclipselink.jar-1} ${manifest.file.reference.javax.persistence_2.1.0.v201304241213.jar-1} lib/${manifest.file.reference.javax.persistence_2.1.0.v201304241213.jar-1} ${manifest.file.reference.mysql-connector-java-5.1.23-bin.jar-1} lib/${manifest.file.reference.mysql-connector-java-5.1.23-bin.jar-1} ${manifest.file.reference.org.eclipse.persistence.jpa.jpql_2.5.2.v20140319-9ad6abd.jar-1} lib/${manifest.file.reference.org.eclipse.persistence.jpa.jpql_2.5.2.v20140319-9ad6abd.jar-1} ${manifest.file.reference.org.eclipse.persistence.jpa.modelgen_2.5.2.v20140319-9ad6abd.jar-1} lib/${manifest.file.reference.org.eclipse.persistence.jpa.modelgen_2.5.2.v20140319-9ad6abd.jar-1} ${manifest.reference.Messaging.jar} lib/${manifest.reference.Messaging.jar} ${manifest.reference.Entities.jar} lib/${manifest.reference.Entities.jar} ${manifest.reference.Utils.jar} lib/${manifest.reference.Utils.jar} "/>
+            <attribute name="Class-Path" value="${manifest.file.reference.eclipselink.jar} lib/${manifest.file.reference.eclipselink.jar} ${manifest.file.reference.javax.persistence_2.1.0.v201304241213.jar} lib/${manifest.file.reference.javax.persistence_2.1.0.v201304241213.jar} ${manifest.file.reference.mysql-connector-java-5.1.23-bin.jar} lib/${manifest.file.reference.mysql-connector-java-5.1.23-bin.jar} ${manifest.file.reference.org.eclipse.persistence.jpa.jpql_2.5.2.v20140319-9ad6abd.jar} lib/${manifest.file.reference.org.eclipse.persistence.jpa.jpql_2.5.2.v20140319-9ad6abd.jar} ${manifest.file.reference.org.eclipse.persistence.jpa.modelgen_2.5.2.v20140319-9ad6abd.jar} lib/${manifest.file.reference.org.eclipse.persistence.jpa.modelgen_2.5.2.v20140319-9ad6abd.jar} ${manifest.reference.Messaging.jar} lib/${manifest.reference.Messaging.jar} ${manifest.reference.Entities.jar} lib/${manifest.reference.Entities.jar} ${manifest.reference.Utils.jar} lib/${manifest.reference.Utils.jar} "/>
         </manifest>
     </target>
     <target name="-copy-meta-inf">
