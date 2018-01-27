@@ -95,11 +95,12 @@ public class EmployeeApp implements Identifiable {
             "3. Make reservation",
             "4. Fulfill reservation",
             "5. Condition check",
+            "6. Show turnover",
             "0. Exit"
         ));
         ConsoleUtils.choice(new Runnable[] {
             ()->System.exit(0), this::search, this::purchase, this::makeReservation,
-            this::fulfillReservation, this::conditionCheck
+            this::fulfillReservation, this::conditionCheck, this::showTurnover
         });
         ConsoleUtils.pause();
     }
@@ -374,5 +375,20 @@ public class EmployeeApp implements Identifiable {
 
         em.getTransaction().commit();
         return turn;
+    }
+    
+    public void showTurnover() {
+        EntityManager em = EMF.createEntityManager();
+        Turnover turn = getTurnover(em);
+        em.close();
+        
+        ConsoleUtils.clear();
+        System.out.print(String.join("\n",
+            "*** SHOW TURNOVER ***",
+            "Store:  " + turn.getIdStore(),
+            "Date:   " + turn.getDate(),
+            "Amount: " + turn.getAmount(),
+            "Profit: " + turn.getProfit()
+        ));
     }
 }
