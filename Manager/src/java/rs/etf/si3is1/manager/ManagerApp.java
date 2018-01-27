@@ -78,11 +78,11 @@ public class ManagerApp implements Identifiable, Runnable {
     protected final long timeout;
     protected final Map<Product, Condition> conditionMap;
     
-    ManagerApp(Manager manager, Store store) {
+    public ManagerApp(Manager manager, Store store) {
         this(manager, store, DEFAULT_TIMEOUT);
     }
 
-    ManagerApp(Manager manager, Store store, long timeout) {
+    public ManagerApp(Manager manager, Store store, long timeout) {
         this.manager = manager;
         this.store = store;
         this.timeout = timeout;

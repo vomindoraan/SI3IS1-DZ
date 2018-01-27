@@ -68,7 +68,7 @@ public class EmployeeApp implements Identifiable {
 
     protected final Employee employee;
 
-    EmployeeApp(Employee employee) {
+    public EmployeeApp(Employee employee) {
         this.employee = employee;
     }
 
