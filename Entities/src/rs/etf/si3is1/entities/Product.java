@@ -128,7 +128,7 @@ public class Product implements Serializable {
 
     @Override
     public String toString() {
-        return String.format("[%d] %s – ¤%.2g", idProduct, name, price);
+        return String.format("[%d] %s – ¤%.2f", idProduct, name, price);
     }
     
 }

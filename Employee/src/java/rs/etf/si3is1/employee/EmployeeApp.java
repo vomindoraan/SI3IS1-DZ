@@ -168,7 +168,7 @@ public class EmployeeApp implements Identifiable {
         Inventory inv = em.find(Inventory.class, new InventoryPK(idStore, p.getIdProduct()));
         
         float maxAmount = inv.getAmount();
-        System.out.printf("How much (max %.2g)? ", maxAmount);
+        System.out.printf("How much (max %.2f)? ", maxAmount);
         float amount = INPUT.nextFloat();
         if (amount > maxAmount) {
             System.err.println("Clamping to " + maxAmount);
@@ -177,8 +177,8 @@ public class EmployeeApp implements Identifiable {
         BigDecimal total = new BigDecimal(amount).multiply(p.getPrice());
         
         System.out.printf(String.join("\n",
-            "You are about to purchase %.2g of: %s",
-            "Total price: %.2g",
+            "You are about to purchase %.2f of: %s",
+            "Total price: %.2f",
             "Are you sure ([y]/n)? "
         ), amount, total, p);
         INPUT.nextLine(); // Flush

@@ -126,7 +126,7 @@ public class FProduct implements Serializable {
 
     @Override
     public String toString() {
-        return String.format("[%d] %s – ¤%.2g (t=%d)", idFProduct, name, msrp, productionTime);
+        return String.format("[%d] %s – ¤%.2f (t=%d)", idFProduct, name, msrp, productionTime);
     }
     
 }
