@@ -65,7 +65,18 @@ public class EmployeeApp implements Identifiable {
         em.close();
         return new EmployeeApp(employee);
     }
-    
+
+    protected final Employee employee;
+
+    EmployeeApp(Employee employee) {
+        this.employee = employee;
+    }
+
+    @Override
+    public int getID() {
+        return employee.getIdEmployee();
+    }
+
     public void menu() {
         ConsoleUtils.clear();
         System.out.println(String.join("\n",
@@ -87,18 +98,7 @@ public class EmployeeApp implements Identifiable {
         });
         ConsoleUtils.pause();
     }
-    
-    protected final Employee employee;
-    
-    EmployeeApp(Employee employee) {
-        this.employee = employee;
-    }
-    
-    @Override
-    public int getID() {
-        return employee.getIdEmployee();
-    }
-    
+
     public void search() {
         ConsoleUtils.clear();
         System.out.println(String.join("\n",
