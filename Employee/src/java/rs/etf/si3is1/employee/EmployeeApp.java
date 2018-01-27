@@ -2,6 +2,7 @@ package rs.etf.si3is1.employee;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
@@ -219,6 +220,37 @@ public class EmployeeApp implements Identifiable {
         em.getTransaction().commit();
     }
     
+    private Store chooseStore(EntityManager em, Product product) {
+        TypedQuery<Inventory> q = em.createQuery(
+            "SELECT i FROM Inventory i WHERE i.inventoryPK.idProduct = :idProduct",
+            Inventory.class);
+        q.setParameter("idProduct", product.getIdProduct());
+        
+        List<Inventory> results = q.getResultList();
+        if (results.isEmpty()) {
+            System.err.println("No stores have the product in stock");
+            return null;
+        }
+        Map<Integer, Store> storeMap = new HashMap<>();
+        
+        System.out.println();
+        results.forEach(inv -> {
+            int idStore = inv.getInventoryPK().getIdStore();
+            Store store = em.find(Store.class, idStore);
+            storeMap.put(idStore, store);
+            // TODO Ask store manager for condition
+            System.out.printf("%s – amount: %.2f\n", store, inv.getAmount());
+        });
+        
+        System.out.print("\n> ");
+        int id = INPUT.nextInt();
+        if (!storeMap.containsKey(id)) {
+            System.err.println("Store " + id + " doesn't exist");
+            return null;
+        }
+        return storeMap.get(id);
+    }
+    
     public void makeReservation() {
         ConsoleUtils.clear();
         System.out.print(String.join("\n",
@@ -232,6 +264,12 @@ public class EmployeeApp implements Identifiable {
         Product p = em.find(Product.class, id);
         if (p == null) {
             System.err.println("Product " + id + " doesn't exist");
+            em.close();
+            return;
+        }
+        
+        Store store = chooseStore(em, p);
+        if (store == null) {
             em.close();
             return;
         }
@@ -254,7 +292,7 @@ public class EmployeeApp implements Identifiable {
         em.getTransaction().begin();
 
         Reservation r = new Reservation();
-        r.setIdStore(employee.getIdStore());
+        r.setIdStore(store);
         r.setIdProduct(p);
         r.setCustomerName(customerName);
         if (!customerPhoneNo.isEmpty()) {
@@ -383,7 +421,7 @@ public class EmployeeApp implements Identifiable {
         em.close();
         
         ConsoleUtils.clear();
-        System.out.print(String.join("\n",
+        System.out.println(String.join("\n",
             "*** SHOW TURNOVER ***",
             "Store:  " + turn.getIdStore(),
             "Date:   " + turn.getDate(),
