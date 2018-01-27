@@ -167,7 +167,16 @@ public class EmployeeApp implements Identifiable {
         int idStore = employee.getIdStore().getIdStore(); // First returns Store, second int
         Inventory inv = em.find(Inventory.class, new InventoryPK(idStore, p.getIdProduct()));
         
-        float maxAmount = inv.getAmount();
+        float maxAmount;
+        if (inv == null || (maxAmount = inv.getAmount()) == 0) {
+            System.out.println("Out of stock, make a reservation instead ([y]/n)?");
+            INPUT.nextLine(); // Flush
+            if (!INPUT.nextLine().toLowerCase().equals("n")) {
+                makeReservation();
+            }
+            return;
+        }
+
         System.out.printf("How much (max %.2f)? ", maxAmount);
         float amount = INPUT.nextFloat();
         if (amount > maxAmount) {
