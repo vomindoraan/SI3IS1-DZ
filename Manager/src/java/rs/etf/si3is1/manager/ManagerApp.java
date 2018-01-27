@@ -1,6 +1,8 @@
 package rs.etf.si3is1.manager;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.Scanner;
 import javax.annotation.Resource;
@@ -20,6 +22,7 @@ import rs.etf.si3is1.entities.Product;
 import rs.etf.si3is1.entities.Store;
 import rs.etf.si3is1.messaging.Condition;
 import rs.etf.si3is1.messaging.Identifiable;
+import rs.etf.si3is1.utils.ConsoleUtils;
 
 public class ManagerApp implements Identifiable, Runnable {
     public static void main(String... args) {
@@ -73,6 +76,7 @@ public class ManagerApp implements Identifiable, Runnable {
     protected final Manager manager;
     protected final Store store;
     protected final long timeout;
+    protected final Map<Product, Condition> conditionMap;
     
     ManagerApp(Manager manager, Store store) {
         this(manager, store, DEFAULT_TIMEOUT);
@@ -82,14 +86,27 @@ public class ManagerApp implements Identifiable, Runnable {
         this.manager = manager;
         this.store = store;
         this.timeout = timeout;
+        this.conditionMap = new HashMap<>();
     }
     
     @Override
     public void run() {
+        ConsoleUtils.clear();
+        System.out.println(String.join("\n",
+            "*** EMPLOYEE APP ***",
+            "",
+            "User:  " + manager,
+            "Store: " + store,
+            ""
+        ));
         JMSContext context = connectionFactory.createContext();
         context.setClientID(getIDString());
+        JMSProducer producer = context.createProducer();
+        JMSConsumer consumerCond = context.createDurableConsumer(
+            conditionRequestTopic, getIDString(), "idStore = " + store.getIdStore(), false);
         while (true) {
-            handleConditionCheck(context);
+            // Each times out after 250 ms
+            handleConditionCheck(context, producer, consumerCond);
 //            handleReservation(context);
 //            handleNewProducts(context);
 //            handleNewPrice(context);
@@ -103,29 +120,34 @@ public class ManagerApp implements Identifiable, Runnable {
     }
     
     public Condition checkCondition(Product product) {
-        return (RANDOM.nextDouble() < 0.7) ? Condition.UNOPENED : Condition.OPENED;
+        Condition cond = (RANDOM.nextDouble() < 0.7) ? Condition.UNOPENED : Condition.OPENED;
+        conditionMap.putIfAbsent(product, cond);
+        return conditionMap.get(product);
     }
     
-    private void handleConditionCheck(JMSContext context) {
-        int idStore = store.getIdStore();
-        JMSProducer producer = context.createProducer();
-        JMSConsumer consumer = context.createDurableConsumer(
-            conditionReplyTopic, getIDString(), "idStore = " + idStore, false);
-        
+    private void handleConditionCheck(JMSContext context, JMSProducer producer, JMSConsumer consumer) {
         try {
             Message msgRecv = consumer.receive(timeout);
+            if (msgRecv == null) {
+                return;
+            }
+            int idStore = store.getIdStore();
             int idProduct = msgRecv.getIntProperty("idProduct");
 
             EntityManager em = EMF.createEntityManager();
             Product p = em.find(Product.class, idProduct);
             em.close();
 
-            ObjectMessage msgSend = context.createObjectMessage(checkCondition(p));
+            Condition cond = checkCondition(p);
+            System.out.printf("Condition check: (idStore=%d, idProduct=%d) => %s\n",
+                    idStore, idProduct, cond.name());
+
+            ObjectMessage msgSend = context.createObjectMessage(cond);
             msgSend.setIntProperty("idStore", idStore);
             msgSend.setIntProperty("idProduct", idProduct);
             producer.send(conditionReplyTopic, msgSend);
         } catch (JMSException e) {
-            System.err.println("Error while handling condition check");
+            System.err.println("Error while handling condition check: " + e.getMessage());
         }
     }
 }

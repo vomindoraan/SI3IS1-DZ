@@ -174,7 +174,7 @@ public class EmployeeApp implements Identifiable {
             System.err.println("Clamping to " + maxAmount);
             amount = maxAmount;
         }
-        BigDecimal total = new BigDecimal(amount).multiply(p.getPrice());
+        BigDecimal total = p.getPrice().multiply(BigDecimal.valueOf(amount));
         
         System.out.printf(String.join("\n",
             "You are about to purchase %.2f of: %s",
@@ -268,18 +268,15 @@ public class EmployeeApp implements Identifiable {
         JMSContext context = connectionFactory.createContext();
         JMSProducer producer = context.createProducer();
         JMSConsumer consumer = context.createConsumer(
-            conditionReplyTopic,
-            "idStore = " + idStore + " AND idProduct = " + idProduct);
+            conditionReplyTopic, "idStore = " + idStore + " AND idProduct = " + idProduct);
         
         try {
             Message msg = context.createMessage();
             msg.setIntProperty("idStore", idStore);
             msg.setIntProperty("idProduct", idProduct);
-//          msg.setObjectProperty("store", employee.getIdStore());
-//          msg.setObjectProperty("product", p);
             producer.send(conditionRequestTopic, msg);
         } catch (JMSException e) {
-            System.err.println("Error while sending condition request");
+            System.err.println("Error while sending condition request: " + e.getMessage());
             return;
         }
         
