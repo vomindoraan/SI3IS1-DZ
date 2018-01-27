@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="2.1" xmlns="http://xmlns.jcp.org/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
+  <persistence-unit name="EntitiesPU" transaction-type="RESOURCE_LOCAL">
+    <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
+    <class>rs.etf.si3is1.entities.Product</class>
+    <class>rs.etf.si3is1.entities.Store</class>
+    <class>rs.etf.si3is1.entities.Employee</class>
+    <class>rs.etf.si3is1.entities.Turnover</class>
+    <class>rs.etf.si3is1.entities.Reservation</class>
+    <class>rs.etf.si3is1.entities.Inventory</class>
+    <class>rs.etf.si3is1.entities.FProduct</class>
+    <class>rs.etf.si3is1.entities.Manager</class>
+    <shared-cache-mode>NONE</shared-cache-mode>
+    <properties>
+      <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/si3is1_store?zeroDateTimeBehavior=convertToNull"/>
+      <property name="javax.persistence.jdbc.user" value="root"/>
+      <property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver"/>
+      <property name="javax.persistence.jdbc.password" value="qwe123"/>
+    </properties>
+  </persistence-unit>
+</persistence>
