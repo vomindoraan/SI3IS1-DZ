@@ -5,7 +5,7 @@
     <class>rs.etf.si3is1.entities.Product</class>
     <class>rs.etf.si3is1.entities.Store</class>
     <class>rs.etf.si3is1.entities.Employee</class>
-    <class>rs.etf.si3is1.entities.Turnover</class>
+    <class>rs.etf.si3is1.entities.Revenue</class>
     <class>rs.etf.si3is1.entities.Reservation</class>
     <class>rs.etf.si3is1.entities.Inventory</class>
     <class>rs.etf.si3is1.entities.FProduct</class>

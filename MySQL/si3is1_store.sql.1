@@ -181,33 +181,33 @@ INSERT INTO `store` VALUES (1,'Metro','Ibarski put 20',1),(2,'Maxi','Trgovačka 
 UNLOCK TABLES;
 
 --
--- Table structure for table `turnover`
+-- Table structure for table `revenue`
 --
 
-DROP TABLE IF EXISTS `turnover`;
+DROP TABLE IF EXISTS `revenue`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `turnover` (
-  `id_turnover` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `revenue` (
+  `id_revenue` int(11) NOT NULL AUTO_INCREMENT,
   `id_store` int(11) NOT NULL,
   `date` date NOT NULL,
   `amount` float NOT NULL,
   `profit` decimal(10,2) NOT NULL,
-  PRIMARY KEY (`id_turnover`),
-  UNIQUE KEY `id_store_date_turnover_uq` (`id_store`,`date`),
-  KEY `fk_id_store_turnover_idx` (`id_store`),
-  KEY `date_turnover_idx` (`date`),
-  CONSTRAINT `fk_id_store_turnover` FOREIGN KEY (`id_store`) REFERENCES `store` (`id_store`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  PRIMARY KEY (`id_revenue`),
+  UNIQUE KEY `id_store_date_revenue_uq` (`id_store`,`date`),
+  KEY `fk_id_store_revenue_idx` (`id_store`),
+  KEY `date_revenue_idx` (`date`),
+  CONSTRAINT `fk_id_store_revenue` FOREIGN KEY (`id_store`) REFERENCES `store` (`id_store`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `turnover`
+-- Dumping data for table `revenue`
 --
 
-LOCK TABLES `turnover` WRITE;
-/*!40000 ALTER TABLE `turnover` DISABLE KEYS */;
-/*!40000 ALTER TABLE `turnover` ENABLE KEYS */;
+LOCK TABLES `revenue` WRITE;
+/*!40000 ALTER TABLE `revenue` DISABLE KEYS */;
+/*!40000 ALTER TABLE `revenue` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 

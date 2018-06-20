@@ -53,7 +53,7 @@ public class Store implements Serializable {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idStore")
     private List<Employee> employeeList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idStore")
-    private List<Turnover> turnoverList;
+    private List<Revenue> revenueList;
 
     public Store() {
     }
@@ -118,12 +118,12 @@ public class Store implements Serializable {
     }
 
     @XmlTransient
-    public List<Turnover> getTurnoverList() {
-        return turnoverList;
+    public List<Revenue> getRevenueList() {
+        return revenueList;
     }
 
-    public void setTurnoverList(List<Turnover> turnoverList) {
-        this.turnoverList = turnoverList;
+    public void setRevenueList(List<Revenue> revenueList) {
+        this.revenueList = revenueList;
     }
 
     @Override

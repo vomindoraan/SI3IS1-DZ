@@ -24,8 +24,8 @@ import rs.etf.si3is1.entities.Inventory;
 import rs.etf.si3is1.entities.InventoryPK;
 import rs.etf.si3is1.entities.Product;
 import rs.etf.si3is1.entities.Reservation;
+import rs.etf.si3is1.entities.Revenue;
 import rs.etf.si3is1.entities.Store;
-import rs.etf.si3is1.entities.Turnover;
 import rs.etf.si3is1.messaging.Condition;
 import rs.etf.si3is1.messaging.Identifiable;
 import rs.etf.si3is1.utils.ConsoleUtils;
@@ -96,12 +96,12 @@ public class EmployeeApp implements Identifiable {
             "3. Make reservation",
             "4. Fulfill reservation",
             "5. Condition check",
-            "6. Show turnover",
+            "6. Show revenue",
             "0. Exit"
         ));
         ConsoleUtils.choice(new Runnable[] {
             ()->System.exit(0), this::search, this::purchase, this::makeReservation,
-            this::fulfillReservation, this::conditionCheck, this::showTurnover
+            this::fulfillReservation, this::conditionCheck, this::showRevenue
         });
         ConsoleUtils.pause();
     }
@@ -179,7 +179,7 @@ public class EmployeeApp implements Identifiable {
     private void performPurchase(EntityManager em, Product p) {
         int idStore = employee.getIdStore().getIdStore(); // First returns Store, second int
         Inventory inv = em.find(Inventory.class, new InventoryPK(idStore, p.getIdProduct()));
-        Turnover turn = getTurnover(em);
+        Revenue rev = getRevenue(em);
 
         float maxAmount = inv.getAmount();
         if (maxAmount == 0) {
@@ -213,8 +213,8 @@ public class EmployeeApp implements Identifiable {
         em.getTransaction().begin();
         
         inv.setAmount(inv.getAmount() - amount);
-        turn.setAmount(turn.getAmount() + amount);
-        turn.setProfit(turn.getProfit().add(total));
+        rev.setAmount(rev.getAmount() + amount);
+        rev.setProfit(rev.getProfit().add(total));
         System.out.println("Purchase completed");
         
         em.getTransaction().commit();
@@ -388,45 +388,45 @@ public class EmployeeApp implements Identifiable {
         context.close();
     }
     
-    private Turnover getTurnover(EntityManager em) {
+    private Revenue getRevenue(EntityManager em) {
         Store store = employee.getIdStore();
         Date date = new Date();
 
-        TypedQuery<Turnover> q = em.createQuery(
-            "SELECT t FROM Turnover t WHERE t.idStore = :store AND t.date = :date",
-            Turnover.class);
+        TypedQuery<Revenue> q = em.createQuery(
+            "SELECT t FROM Revenue t WHERE t.idStore = :store AND t.date = :date",
+            Revenue.class);
         q.setParameter("store", store).setParameter("date", date);
 
-        List<Turnover> results = q.getResultList();
+        List<Revenue> results = q.getResultList();
         if (!results.isEmpty()) {
             return results.get(0);
         }
 
         em.getTransaction().begin();
 
-        Turnover turn = new Turnover();
-        turn.setIdStore(store);
-        turn.setDate(date);
-        turn.setAmount(0);
-        turn.setProfit(BigDecimal.ZERO);
-        em.persist(turn);
+        Revenue rev = new Revenue();
+        rev.setIdStore(store);
+        rev.setDate(date);
+        rev.setAmount(0);
+        rev.setProfit(BigDecimal.ZERO);
+        em.persist(rev);
 
         em.getTransaction().commit();
-        return turn;
+        return rev;
     }
     
-    public void showTurnover() {
+    public void showRevenue() {
         EntityManager em = EMF.createEntityManager();
-        Turnover turn = getTurnover(em);
+        Revenue rev = getRevenue(em);
         em.close();
         
         ConsoleUtils.clear();
         System.out.println(String.join("\n",
-            "*** SHOW TURNOVER ***",
-            "Store:  " + turn.getIdStore(),
-            "Date:   " + turn.getDate(),
-            "Amount: " + turn.getAmount(),
-            "Profit: " + turn.getProfit()
+            "*** SHOW REVENUE ***",
+            "Store:  " + rev.getIdStore(),
+            "Date:   " + rev.getDate(),
+            "Amount: " + rev.getAmount(),
+            "Profit: " + rev.getProfit()
         ));
     }
 }

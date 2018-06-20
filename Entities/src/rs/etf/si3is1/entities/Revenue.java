@@ -28,22 +28,22 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author Konstantin
  */
 @Entity
-@Table(name = "turnover")
+@Table(name = "revenue")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Turnover.findAll", query = "SELECT t FROM Turnover t")
-    , @NamedQuery(name = "Turnover.findByIdTurnover", query = "SELECT t FROM Turnover t WHERE t.idTurnover = :idTurnover")
-    , @NamedQuery(name = "Turnover.findByDate", query = "SELECT t FROM Turnover t WHERE t.date = :date")
-    , @NamedQuery(name = "Turnover.findByAmount", query = "SELECT t FROM Turnover t WHERE t.amount = :amount")
-    , @NamedQuery(name = "Turnover.findByProfit", query = "SELECT t FROM Turnover t WHERE t.profit = :profit")})
-public class Turnover implements Serializable {
+    @NamedQuery(name = "Revenue.findAll", query = "SELECT r FROM Revenue r")
+    , @NamedQuery(name = "Revenue.findByIdRevenue", query = "SELECT r FROM Revenue r WHERE r.idRevenue = :idRevenue")
+    , @NamedQuery(name = "Revenue.findByDate", query = "SELECT r FROM Revenue r WHERE r.date = :date")
+    , @NamedQuery(name = "Revenue.findByAmount", query = "SELECT r FROM Revenue r WHERE r.amount = :amount")
+    , @NamedQuery(name = "Revenue.findByProfit", query = "SELECT r FROM Revenue r WHERE r.profit = :profit")})
+public class Revenue implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
-    @Column(name = "id_turnover")
-    private Integer idTurnover;
+    @Column(name = "id_revenue")
+    private Integer idRevenue;
     @Basic(optional = false)
     @Column(name = "date")
     @Temporal(TemporalType.DATE)
@@ -59,26 +59,26 @@ public class Turnover implements Serializable {
     @ManyToOne(optional = false)
     private Store idStore;
 
-    public Turnover() {
+    public Revenue() {
     }
 
-    public Turnover(Integer idTurnover) {
-        this.idTurnover = idTurnover;
+    public Revenue(Integer idRevenue) {
+        this.idRevenue = idRevenue;
     }
 
-    public Turnover(Integer idTurnover, Date date, float amount, BigDecimal profit) {
-        this.idTurnover = idTurnover;
+    public Revenue(Integer idRevenue, Date date, float amount, BigDecimal profit) {
+        this.idRevenue = idRevenue;
         this.date = date;
         this.amount = amount;
         this.profit = profit;
     }
 
-    public Integer getIdTurnover() {
-        return idTurnover;
+    public Integer getIdRevenue() {
+        return idRevenue;
     }
 
-    public void setIdTurnover(Integer idTurnover) {
-        this.idTurnover = idTurnover;
+    public void setIdRevenue(Integer idRevenue) {
+        this.idRevenue = idRevenue;
     }
 
     public Date getDate() {
@@ -116,18 +116,18 @@ public class Turnover implements Serializable {
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (idTurnover != null ? idTurnover.hashCode() : 0);
+        hash += (idRevenue != null ? idRevenue.hashCode() : 0);
         return hash;
     }
 
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Turnover)) {
+        if (!(object instanceof Revenue)) {
             return false;
         }
-        Turnover other = (Turnover) object;
-        if ((this.idTurnover == null && other.idTurnover != null) || (this.idTurnover != null && !this.idTurnover.equals(other.idTurnover))) {
+        Revenue other = (Revenue) object;
+        if ((this.idRevenue == null && other.idRevenue != null) || (this.idRevenue != null && !this.idRevenue.equals(other.idRevenue))) {
             return false;
         }
         return true;
@@ -135,7 +135,7 @@ public class Turnover implements Serializable {
 
     @Override
     public String toString() {
-        return "rs.etf.si3is1.entities.Turnover[ idTurnover=" + idTurnover + " ]";
+        return "rs.etf.si3is1.entities.Revenue[ idRevenue=" + idRevenue + " ]";
     }
     
 }
